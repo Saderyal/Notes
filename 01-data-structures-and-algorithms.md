@@ -14,9 +14,9 @@ There are actually 6 formulas, or types of Big O notations (ordered from the les
 * **CONSTANT TIME** -> `O(1)`. It's the less expensive. You do only one operation.
 * **LOGARITMIC TIME** -> `O(log n)` It's the complexity time for perfect binary trees. It's extremely efficient, because you don't have to look each element.
 * **LINEAR TIME** -> `O(n)`. For a for loop. You look every element.
-* ---- **TO DO** -> `O(n log n)`. It's a common time complexity for sorting algorithms.
+* **TO DO** -> `O(n log n)`. It's a common time complexity for sorting algorithms.
 * **QUADRATIC TIME** -> `O(n^2)`, `O(a*b)`. For nested for loops.
-* ----**TO DO** -> `O(2^n)`. TO DO
+* **TO DO** -> `O(2^n)`. TO DO
 * **FACTORIAL TIME**, or "oh no!" -> `O(n!)` It's the most expensive. A loop for each item.
 
 
