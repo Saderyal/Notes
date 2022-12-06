@@ -66,7 +66,8 @@ You have to be really really aware with:
 
 This makes the code less optimized, because can't permit to use `inline caching`.
 Another thing to mantion, are **Hidden Classes**. You should never declare a new object property, or at least, for 2 objects, you should declare them in the same order. I know it sounds confusing, but here an example of what NOT TO DO:
-```
+
+```javascript
 function Animal(x, y){
   this.x = x;
   this.y = y;
@@ -80,6 +81,7 @@ obj1.b = 100;
 obj2.b = 30; //NOOOOO
 obj.a = 100; //NOOOOO x2. You should swap them.
 ```
+
 This "slow down" happens also with the `delete` key, becuase you change the Hidden class that the optimizer create.
 
 ### WebAssembly
@@ -103,7 +105,8 @@ Note: in an infinite loop where you constantly add items in an array, you can st
 
 Fun Fact: to prevent the stack overflow in a recursive function, you can add the call of the function as the callback to a setTimeout, with the set to 0. This will cause the function to still be removed from the call stack (setTimeout runs in the Web API. To know more, see the "[Javascript Runtime](#js-runtime)" section).
 Example:
-```
+
+```javascript
 const list = new Array(60000).join('1.1').split('.');
 function removeItemsFromList() {
   var item = list.pop();
@@ -146,7 +149,8 @@ Another part of the execution context is the **Scope chain**. Every execution co
 ### The "arguments" keyword
 
 If you remember, the keyword "arguments" is one of the things to NOT USE if you wanna optimize the code. You will rather do something like this:
-```
+
+```javascript
 function ok(...args){
   console.log(args[0], args[1])
 }
@@ -159,14 +163,15 @@ Another things you've already seen to optimize the code are to not use `eval()` 
 ### A weird thing in JS
 
 Javascript here can be a little bit weird:
-```
+
+```javascript
 function weird(){
   height = 50
   return height
 }
 weird()
 ```
-Where do you think the variabel height will belong to?
+Where do you think the variable height will belong to?
 The answer is: in the global context. That's because the variable doesn't hava a `var` or anything before, so it'll chech if the parent has this variable until it arrive to the global context. If neither the global contex has the variable `height`, it will be created automatically (usually you don't want this).
 To prevent this, you can write `'use strict'` in the first line of code. After that, the function will now rise an error.
 
@@ -177,14 +182,17 @@ To prevent this, you can write `'use strict'` in the first line of code. After t
 ### Global Variables and IIFE
 
 Global variables are really something to avoid in JS. Other than polluting the memory heap and also the global execution context, you also can have collision problems within 2 different files (where a file override the global variable of another one). To avoid this, Javascript developers used (before the creation of JS modules, which we'll see later) the **IIFE** (Immediately Invoced Function Expressions). See this example:
-```
+
+```javascript
 (function(){
 
 })()
 ```
+
 With this code, you tell Javascript to not do [hoisting](#hoisting), and the variable you declare inside will not be global. This technique is particuarly used in frameworks and plugins (such jQuery).
 Let's see a detailed example:
-```
+
+```javascript
 // NOTE: "myPlugin" will still be global, but it's just one variable
 // and you will hardly have collisions with that
 var myPlugin = (function(){ 
@@ -202,9 +210,11 @@ myPlugin.a() // Returns 5 :)
 
 ==`this` is the object that the function is a property of.==
 It simply means this... let's see:
-```
+
+```javascript
 obj.someFunc(this)
 ``` 
+
 `this`, refers to the `obj` object. So, as said, "is the object that the function is a property of". I think that with the example makes more sense, isn't it?
 
 Why it has been created?
@@ -221,7 +231,7 @@ Every declared function have these 3 methods: `call()`, `apply()`, and `bind()`.
 * `apply()` - Same of the call method, but instead of using `call(newThis, param1, param2, ..., paramN)` it only accepts two parameters: the "newThis", and an array (the list of the parameters)
 * `bind()` - Accepts the same parameters of call and apply, but instead of calling immediately the function, it simply will return a new function with the `this` keyword and the parameters "fixed" in it.
 
-```
+```javascript
 // call() example
 const wizard = {
   name: 'Merlin',
@@ -242,13 +252,15 @@ console.log(archer) // HE RESTORED HIS LIFE THANKS TO THE WIZARD, WOAHH!
 ## Lexical Environment
 
 Lexical environment and analysis, simly checks "where the code has been written" (in the global context? Inside another function?). This, way, in can know to which "universe" the function/variable belongs to.
-```
+
+```javascript
 function a(){
   function b(){
     return
   }
 }
 ```
+
 In the above example, we know that the function `b` is lexically inside the `a` function.
 In Javascript, our lexical "scope" (availabel data + variables where the function was defined) determines our available variables. Not where the function is called (dynamic scope).
 
@@ -258,26 +270,28 @@ In Javascript, our lexical "scope" (availabel data + variables where the functio
 
 **Hoisting** is the behavior of moving the variables or function declaration to the top of the respective environment during compilation phase. What it means is that you, for example, can call a function before it has been declared, because the hoisting phase will place the declaration on top.
 So:
-```
+
+```javascript
 console.log(sing())
 function sing(){
   console.log('ooooh la la la')
 }
 ```
+
 This piece of code will not raise an error, because of hoisting :)
 Note that not all languages works like that.
 Functions are **Fully hoisted**, while variables are just **Partially hoisted**, meaning that they'll be available, but the value of the variable will be undefined  (before the declaration).
 
 > **Note:** Hoisting doesn't work with `let` and `const` variables (only with `var`) and also with functions wrapped between parentesis:
-> ```
+> ```javascript
 > console.log(daddy)
 > console.log(mommy)
 > console.log(issues)
->let daddy = 'daddy issues'
->const mommy = 'mommy issues'
->(function issues(){
->  console.log('I have daddy and mommy issues')
->})
+> let daddy = 'daddy issues'
+> const mommy = 'mommy issues'
+> (function issues(){
+>   console.log('I have daddy and mommy issues')
+> })
 >```
 >In the above code, all the console logs will raise an error.
 
@@ -313,9 +327,11 @@ In Javascript, fortunately (or not?), there are only 7 types:
 
 A primitive type is a data that only represents a single value. So, in the above list of types, numbers, booleans, strings, symbol, null, and undefined, are **primitive values**, because there is only a single value. On the other side, Objects and derivates like arrays, functions, and so on, are **Non-Primitive** types.
 But, Javascript is a little bit tricky with that. Here's Why:
-```
+
+```javascript
 true.toString() // 'true'
 ```
+
 Why is a boolean acting like an Object?
 Actaully, Javascript create a "wrapper function" for each primitive value, so that you can work with it (just like this: `Boolean(true).toString()`). That's why you can access methods on primitive values.
 
@@ -324,17 +340,20 @@ Actaully, Javascript create a "wrapper function" for each primitive value, so th
 ### Passing by value VS Passing by reference
 
 Primitive types are **immutable**, meaning you can't really change them. If you point a variable to another one with a primitive type, you still can't change it's reference. Here's what i mean:
-```
+
+```javascript
 var a = 5
 var b = a
 b++
 console.log(a) // 5
 console.log(b) // 6
 ```
+
 Incrementing `b` didn't change the value of a. This is because in memory there is a ==pass-by-value==.
 
 On the other hand, in Non-primitive types, there is a ==pass-by-reference==, meaning that a new variable will _point_ to the reference of the previous one, so if you change the value of the `obj2`, you will also change the value of the `obj1`.
-```
+
+```javascript
 var a = {value: 5}
 var b = a
 b.value++
@@ -343,17 +362,21 @@ console.log(b.value) // 6
 ```
 
 There is a big problem of this if you want to copy an object, beacuse if you have nested object, you really can only do a **shallow** copy (copy only the superficial values, while the nested ones are pointers to a place in memory). To avoid this, there is a little method:
-```
+
+```javascript
 const superClone = JSON.parse(JSON.stringify(obj))
 ```
+
 Note: this can have performance implications!!
 
 ## Type Coercion
 
 Type coercion is something like this:
-```
+
+```javascript
 1 == '1' // true (WTF)
 ```
+
 Basically, type coercion means the language tries converting a certain type to another type. 
 
 > Do all languages have type coersion? This question might sound difficult and tricky, but the answer is: "yes, because we always need to convert types in memory (there are only 0 and 1!)".
@@ -387,12 +410,15 @@ We'll dig more and more deep into the details of this two big pillars of Javascr
 ### Functions are objects
 
 To prove what we previously said (that functions are objects), Javascript offers an Object to create a function:
-```
+
+```javascript
 const f = new Function('console.log("woohoo")')
 f() // woohoo
 ```
+
 Another point is that, actually, you can add properties to a function:
-```
+
+```javascript
 function f(){}
 f.uck = 'WTF'
 console.log(f.uck) // 'WTF'
@@ -421,7 +447,8 @@ They can make the code extremly more readable, optimized, and most importantly, 
 ==Closures are _the sum of the "first class citizen" nature of function and the Lexical scope_==. Closures allows function to access variables from an enclosing scope or environment even after it leaves the scope in which it was declared.
 Sounds pretty confusing, I know.
 Let's see in concrete what it means:
-```
+
+```javascript
 function a(){
   let grandpa = 'grandpa'
   return function b(){
@@ -435,6 +462,7 @@ function a(){
 const one = a()
 // a()()() --> 'grandpa > father > son'
 ```
+
 If you think about it, that's normal. Isn't it?
 But, after we call `a()`, it'll be removed from the call stack with all its execution context (meaning all variables will be lost). How is it even possible that the nested functions will have still access to its variables?
 Guess what. That's because of **closures**.
@@ -444,7 +472,8 @@ The `c` function, will look in its variable envirnonemnt and see if it has `gran
 That's why closures are the sum of functions and lexical scope: ==where we write the function matters, not where we called it==. That's a really important concept.
 
 You can have a lot of hidden power with this, because you can create a parent generic function, and you can create other functions based on that one. See this example:
-```
+
+```javascript
 const boo = (string) => (name) => (name2) => console.log(`${string} ${name} ${name2}`)
 
 const booString = boo('hi)
@@ -461,7 +490,8 @@ The two main reasons why you want to use closures are:
 The reason why closures are memory efficient, is because ==you don't create and destroy every time the data==, but you call the function once, so you allocate only once a "semi-persisent" part of memory, that will be then used by nested functions.
 In concrete:
 This Re-create the bigArray every time... VERY BAD!
-```
+
+```javascript
 function heavyDuty(index){
   const bigArray = new Array(7000).fill('🤓')
   console.log('created')
@@ -471,7 +501,8 @@ heavyDuty(420)
 ```
 
 This one create the array only one time. VERY GOOD AND EFFICIENT!!
-```
+
+```javascript
 function heavyDuty2(){
   const bigArray = new Array(7000).fill('🤓')
   console.log('created again!')
@@ -486,7 +517,8 @@ const getHeavyDuty = heavyDuty()
 
 Encapsulation permit to have ==more security over data==, because data cannot be directly exposed.
 Let's see this big example:
-```
+
+```javascript
 const makeNuclearButton = () => {
   let timeWithoutDestruction = 0
   const passTime () => timeWithoutDestruction++
@@ -508,6 +540,7 @@ ohno.totalPeaceTime() // 10
 ohno.launch()
 ohno.totalPeaceTime() // -1
 ```
+
 Here, you cannot access and modify by yourself the `timeWithoutDestruction` variable, so the function is more secure.
 
 ## Prototypal Inheritance
@@ -516,16 +549,19 @@ Here, you cannot access and modify by yourself the `timeWithoutDestruction` vari
 
 ==Inheritance is an object getting access to the properties and methods of another objects==. For example, as we said before, arrays and functions are just objects. This means that they inherit all methods/properties of Objects.
 You can check this by doing:
-```
+
+```javascript
 const arr = []
 console.log(arr.__proto__) // All methods/properties of arrays
 console.log(arr.__proto__.__proto__) // All methods/properties of objects
 ```
+
 Javascript is different from other languages becasue of this. Other languages doesn't have the prototype chain.
 
 Prototype chain allows us to make an object inherit all methods and properties of another one (without override them).
 You can do that by assigning the `__proto__` object to another value:
-```
+
+```javascript
 const person1 = {
   name: 'Tongi',
   lastName: 'Patongi',
@@ -549,7 +585,8 @@ person2.hasOwnProperty('name') // true
 ```
 
 You can also create an object based on another one. This new created object will inherit all attributes of the parent, this way:
-```
+
+```javascript
 let human = {
   mortal: true
 }
@@ -563,16 +600,19 @@ Although you can use and modify the `__proto__` value, you should never modify i
 First, because it's useful to know if you really wanna go deep down into the Javascript language, and, second, because it's the mechanism used in Object Oriented Programming (OOP) with Javascript.
 
 Actually, the `__proto__` property points to the parent `prototype` property.
-```
+
+```javascript
 child.__proto__ == parent.prototype // true
 ```
+
 > **Note**: Only functions have the `prototype` property, that you can also modify (without performance implications)
 
 > **Note**: the `Object` object (lol) it'a actually a function (you can check it by typing `typeof Object`). That's why yoy can access the `prototype`property.
 
 The only time we use the `prototype` attribute is when we want to create **classes**. To do that, we want to create a function with a capital letter. I won't waste your time with complicated examples right now. It would look confusing, maybe. We'll see it more and more deeply in the [OOP section](#oop). Let's just see a quick example.
 Adding a function to the `Date` object:
-```
+
+```javascript
 Date.prototype.lastYear = function(){
   return this.getFullYear() - 1
 }
@@ -606,20 +646,23 @@ But, here's a thing. This is not really Object Oriented Programming, yet. How ca
 ## Constructor functions
 
 Instead of using `Object.create()`, you can create a function where you just set the properties, with `this.proeprty1`, and so on. But, if you do that, you have to use the `new` keyword:
-```
+
+```javascript
 function Character(name, weapon){
   this.name = name
   this.weapon = weapon
 }
 const elf = new Character('Sam', 'stones')
 ```
+
 Every function called with new up front, it's called a **constructor function**.
 
 > **Note**: it'll not raise an error, but you really should define the name of a constructor function with a capital letter (e.g. `Person`, not `person`), so that other developers know that that function it's a constructor function.
 
 When you use the `new` keyword, you change the `this` keyword value to be the object you just created (insted of window). If you remove `new`, the `this` keyword will have the value of the window.
 Here, with the `prototype` property, you can add methods to this newly createed object.
-```
+
+```javascript
 // ... previusly created constructor function
 
 Character.prototype.attack = function(){
@@ -628,6 +671,7 @@ Character.prototype.attack = function(){
 const elf = new Character('Sam', 'stones')
 elf.attack() // attack with stones
 ```
+
 How awesome is that?
 The attack function will also be present only one time in memory, and not one for each character we create. So, so good.
 
@@ -637,7 +681,8 @@ But... this is not pretty. Is it? ._.
 
 With ECMAScript 6 (ES6), Javscript finally comes out with classes.
 The beauty of classes is that you contain every related functionality in the "box" of that class, keeping everything in order. Let's re-create the previous Character object:
-```
+
+```javascript
 class Character {
   constructor(name, weapon){
     this.name = name
@@ -650,6 +695,7 @@ class Character {
 const peter = new Character('Peter', 'nuclear bomb')
 peter.attack()
 ```
+
 How cool is that?
 In JS Classes, you define the constructor function with the `constructor` keyword, and define functions without the `function` keyword.
 
@@ -662,7 +708,8 @@ Even if it doesn't looks like OOP, using `Object.create()` it's **pure prototypa
 One big part of OOP is **inheritance**. usually you have a "generic" class, and you want a new object to "extends" the behavior of the generic one. For example, in our fantasy game, we want to implement the wizard, which is a normal character, but it also can heal other characters. It can also have a new `type` property.
 Before we had the class syntax, it was really difficult implementing inheritance.
 But, here's how you do it in ES6:
-```
+
+```javascript
 class Wizard extends Character {
   constructor(name, weapon, type){
     super(this)
@@ -679,8 +726,8 @@ wizard.heal(peter) // heal Peter
 Wizard.isPrototypeO(Character) // true
 wizard isinstanceof Wizard // true
 wizard isinstanceof Character // false
-
 ```
+
 With the `super` method you access the constructor of the parent class (`Character`, in this case). That's why you have to have in the parameters (in this case) also the parameters that the parent class have.
 
 > **Note**: In every extended class, you MUST call `super()` before accessing the `this` keyword in the constructor.
@@ -697,7 +744,8 @@ In this cases, OOP becomes really inefficient in term of coding simplicity, read
 
 In JS, you really haven't private fields in classes. There's a standard that says you should use the underscore before the name of the field, but you can still access it, and that's a big problem.
 But now, with ES2022 you can define a private method/property with the hash before the name:
-```
+
+```javascript
 class Ehehe {
   #privateProperty = 200
   constructor(){
@@ -743,7 +791,8 @@ A pure functions is a function that:
 2. Don't modify the data outside itself (side-effects)
 
 For example:
-```
+
+```javascript
 const array = [1,2,3]
 function a(arr){
   arr.pop()
@@ -751,26 +800,31 @@ function a(arr){
 a(array)
 console.log(array) // [1, 2]
 ```
+
 The function in the above example modify the value of the original array. So, This is NOT a pure function. A behaviour like that can be really confusing and less maintainable. This is called **side effect**.
 
 How can we write something without a side effect?
 Well, we can, in the above example, copy the array and use the copy, rather than the original. This way, data is more secure, and the function doesn't affect the outside world.
 Here's a tricky question: is the function below a pure function?
-```
+
+```javascript
 function a(){
   console.log('hi)
 }
 ```
+
 The answer is: "no, it's not, because it affects the outside world (the `console` is a window variable)".
 
 But, we've talk enough about the second point. What about the first one?
 Look at this function:
-```
+
+```javascript
 function a(num1, num2){
   return num1 + num2
 }
 a(5, 2) // 7
 ```
+
 If I completely replace the call to the function with its result, will it affect the program? In this case, no. The function, with the parameters 5 and 2, will always return 7. This is called **Referencial Transparency**. That function also have no side-effects, so it's a _pure function_.
 
 Can everything be pure? Ahahaha, no.
@@ -792,10 +846,12 @@ At the end of the day, functional programming is just making the code... _predic
 ## Indempotence
 
 Indempotence means that, similar to pure functions, given the same inputs you get the same output over and over again, but, you also get the same result if you call the function with the result of the same function as a parameter. Here's what I mean:
-```
+
+```javascript
 Math.abs(-50) // 50
 Math.abs(Math.abs(-50)) // 50
 ```
+
 The `Math.abs()` function is indempotent.
 
 ## Imperative vs Declarative
@@ -804,7 +860,8 @@ Imperative code is code that tell the machine what to to and how to do it. Decla
 
 Technically, the computer likes Imperative code, but humans likes declarative.
 Examples:
-```
+
+```javascript
 // Imperative - You say "save i, console.log i, increment i, repeat"
 for(let i=0; i<1000; i++){
   console.log(i)
@@ -839,7 +896,8 @@ Also, even if closures have inner functions that can modify the state of the par
 ## Currying
 
 Currying is the technique of translating the evaluation of a function that takes multiple arguments into evaluating multiple functions that only takes one parameter.
-```
+
+```javascript
 const multiply = (a, b) => a*b // Not curried
 const curriedMultiply = (a) => (b) => a*b // curried
 
@@ -848,7 +906,8 @@ curriedMultiply(5)(3) //15
 
 Why is this useful? We've seen also this before, but maybe not as technically. With currying, you can create multiple utility functions based on the "first" function.
 For example:
-```
+
+```javascript
 const multiplyBy5 = curriedMultiply(5)
 const multiplyBy10 = curriedMultiply(10)
 
@@ -860,7 +919,8 @@ multiplyBy10(5) // 50
 
 **Partial application** is a process of producing a function with a smaller number of parameters. It's similar to currying.
 Let's see how it look and compare it to currying.
-```
+
+```javascript
 const multiply = (a, b, c) => a*b*c
 const curriedMultiply = (a) => (b) => (c) => a*b*c // curried
 
@@ -869,6 +929,7 @@ curriedMultiply(5)(4)(10) // 200
 const partialMultiplyBy5 = multiply.bind(null, 5)
 partialMultiplyBy5(4, 10) // 200
 ```
+
 Partial application says that, on the second call, it expects all the arguments, while currying is expecting one argument at a time.
 
 ## Memoization
@@ -879,12 +940,15 @@ Functional programming massivly use, with closures, **memoization** (see more in
 
 Is the idea that ==any sort of data transformation that we do, should be obvious==. It's a system design principle.
 This way, you can create "factories":
+
 ```
 Data -> Function -> Data -> Function -> ...
 ```
+
 We wanna so build a `compose()` function that accepts multiple functions as parameters, and every function we pass will return, in order, the result for the next one.
 In the next example, we create a function that multiply by 3, and then return the absolute result.
-```
+
+```javascript
 const compose = (f,g) => (data) => f(g(data))
 const multiplyBy3 = (num) => num*3
 const makePositive = (num) => Math.abs(num)
@@ -892,6 +956,7 @@ const multiplyBy3AndAbsolute = compose(multiplyBy3, makePositive)
 
 multiplyBy3AndAbsolute(-50) // 150
 ```
+
 We can so compose functions to create new functionality.
 This is so diffused that there are actually a lot of libraries that just do that.
 The order of execution in the above example is:
@@ -922,7 +987,7 @@ We have a user, and we want to:
 3. Buy item: cart --> puchases
 4. Empty cart
 
-```
+```javascript
 const user = {
   name: 'Kim',
   active: true,
@@ -968,6 +1033,7 @@ purchaseItem(
   emptyCart,
 )(user, user, {name: 'laptop', price: 244}) // WOAHHH
 ```
+
 Functional programming is so powerful because you can now, for example, add some "history" and go back and forth with the data.
 
 
@@ -997,18 +1063,21 @@ Asynchronous code is used, for example, to make API Requests, and, basically, as
 With ES6 Javascript comes out with **Promises**. A `Promise` is an object that may produce a single value some time in the future (either a result or a rejection). Promises were created to avoid the "piramid" problem (a lot of callbacks nested one to the other). It makes asynchronous code more readable, but you still have callbacks for `.then()` an `.catch()` ("then" for results, "catch" for errors).
 
 With ES8, Javascript simplify things with the keywords `async` and `await`. This new feature make everything really more readable and understandable. You can mark a function as async (The result of the function will be a `Promise`), and you can put `await` in the asynchronous line of code.
-```
+
+```javascript
 async function asynchronousFunction(){
   const results = await getResults()
   return results
 }
 asynchronousFunction() // Promise
 ```
+
 This is asynchronous code, but it looks like if it's synchronous, right?
 
 In ES9, again, Javascript added something really cool: the possibility to do an **"await for-of loop"**.
 Ok, ok, let's see how you can do it:
-```
+
+```javascript
 const urls = [
   'https://jsonplaceholder.typicode.com/users',
   'https://jsonplaceholder.typicode.com/posts',
@@ -1022,6 +1091,7 @@ const getData = async function(){
   }
 }
 ```
+
 THIS IS SO COOL MAN, I SWEAR. 🔥
 
 Ok, That's all for the cool, refreshing, staff that Javascript offers about asynchronous code.
@@ -1043,7 +1113,8 @@ When it comes to promises, there are 3 crucial things you have to decide, that i
 Let's see an example for each one:
 
 **PARALLEL:**
-```
+
+```javascript
 async function parallel(){
   const promises = [a(), b(), c()]
   const [output1, output2, output3] = await Promise.all(promises)
@@ -1053,7 +1124,8 @@ parallel().then(console.log)
 ```
 
 **SEQUENTIAL**:
-```
+
+```javascript
 async function sequential(){
   const output1 = await a()
   const output2 = await b()
@@ -1064,7 +1136,8 @@ sequential().then(console.log)
 ```
 
 **RACE**:
-```
+
+```javascript
 async function race(){
   const promises = [a(), b(), c()]
   const output1 = await Promise.race(promises)
@@ -1084,7 +1157,8 @@ We said that Javascript is single-threaded, but, with the Web API, we can get mu
 Everytime you create a new tab on the browser, it'll be assigned to a new thread.
 This is called a **Web Worker**. A Web Worker handle multiple threads on the background.
 How can you create one?
-```
+
+```javascript
 var worker = new Worker('worker.js)
 worker.postMessage('Hellooo') // Post a message to another thread
 
@@ -1097,7 +1171,8 @@ But, it's useful to know it's existance.
 Javascript doesn't apply **Paralellism** (multiple CPU core running at the same time), but, node does.
 
 In node:
-```
+
+```javascript
 const {spawn} = require('child_process')
 spawn('git', ['stuff']) // Genereate a new process that you can run.
 ```
@@ -1125,17 +1200,20 @@ But, JS modules are something really recent. How did this problem get resolved e
 ## Module Pattern
 
 The first of the many methods is the **Module pattern**.
-The module pattern is structurized like this;
+The module pattern is structurized like this:
+
 ```
 // Global scope
   // Module scope
     // Function scope
       // Block scope - let and const
-``` 
+```
+
 This way we can be explicit on which functions, variables, and so on, we need to have in our module.
 To achieve this, we need to use concepts like **encapsulation** and **closures**.
 This is how it is done:
-```
+
+```javascript
 var fightModule = (function(){
   var harry = 'potter'
   var voldemort = 'He who must not be named'
@@ -1147,15 +1225,18 @@ var fightModule = (function(){
   }
 })()
 ```
+
 All the code we've written is private, so also `harry`, `voldemort`, and `fight` are private to that module and don't pollute the global scope.
 Also, if we want an external module to access something, just like `fight()`, we can return it in an object, just like in the example.
 So, if another module needs the fight method, you just have to access it like this:
-```
+
+```javascript
 var anotherModule = (function(fightModule){
   var fight = fightModule.fight
   fight() // Potter wins
 })(fightModule) // Needs the fightModule
 ```
+
 Note that we pass in the arguments the fightModule. This is beacuse we don't want the `anotherMdoule` to modify the `fightModule`. It would be bad.
 
 But... There are two main problems with this approach:
@@ -1168,17 +1249,20 @@ Can we desgin a way to improve the module pattern (because of the problems we've
 **CommonJS** and **AMD** (Asynchronous Module Definition) came out to resolve these problems.
 
 CommonJS looks something like this
-```
+
+```javascript
 var module = require('module1')
 var module2 = require('module2)
 ```
+
 NodeJS actually still uses CommonJS.
 In CommonJS, modules are meant to be loaded synchronously, and that's not ideal for browsers (that's why it's mainly used in the servers).
 
 This problem was solved by **Browserify**, that is a simple terminal application that reads the JS files and bunlde them togheter based on what each file requires (with the sintax of CommonJS), so that then you only have to include in your browser a sinlge `bundle.js` file.
 
 On the other Hand, **AMD**, looks like this:
-```
+
+```javascript
 define(['module1', 'module2'], function(module1Import, module2Import){
   var module1 = module1Import
   var module2 = module2Import
@@ -1190,6 +1274,7 @@ define(['module1', 'module2'], function(module1Import, module2Import){
   }
 })
 ```
+
 I personally don't like it, but, it was designed specificately for browsers, so it loads modules asynchronously (that is way better than CommonJS for performance).
 
 This two packages solve every problem we've mentioned before.
@@ -1203,7 +1288,8 @@ At the end of the day, UMD was just an "if-else" statement, so... not ideal, rig
 ## ES6 Modules
 
 NOW, modules are built-in in Javascript, and they are very easy to use:
-```
+
+```javascript
 import module1 from 'module1'
 
 const harry = 'potter'
@@ -1213,6 +1299,7 @@ export function fight(){
   // ...
 }
 ```
+
 HOW. COOL. IS. THAT??
 Simple and clear.
 You can import some modules and export whatever you want to other modules. The `harry` and `voldemort` variables are not exported, so they are private.
@@ -1231,9 +1318,11 @@ Errors or Exceptions are often inevitable. Perfect developers doesn't exists. Fo
 ## Try-Catch blocks
 
 In JS there is a native `Error` object, that you can create. But, once you craete an error, nothing happens, because you have to `throw` it.
-```
+
+```javascript
 throw new Error('oopsie')
 ```
+
 Actually, you can throw everything, not just the Error object, but, the Error constructor is useful to get information about the error that happened, just like the `message`, and the stack (where we were in the call stack when the error happened).
 
 > Throwing an error interrupt the execution of the program.
@@ -1246,7 +1335,8 @@ If an error gets thrown, the runtime checks the call stack to know if there is a
 But, what is a catch?
 
 A catch is simply a block of code that will be executed whenever an error occurs.
-```
+
+```javascript
 try {
   consol.log('This works') // "consol" is a typo
 } catch(error) {
@@ -1256,7 +1346,8 @@ try {
 ```
 
 Or, you can manually throw an error. Also, you can add a `finally` block code that will be always executed:
-```
+
+```javascript
 try {
   throw new Error('oopsie!!!')
 } catch(error) {
@@ -1271,7 +1362,8 @@ You can also have nested try and catch blocks.
 ## Asynchronous code errors
 
 Promises and in general asynchronous code have a different type of error handling, which is the `.catch()`. The catch method is built-in in the Promises, so we can do this:
-```
+
+```javascript
 Promise.resolve('asyncfail').then(response => {
   throw new Error('#1 fail')
   return response
@@ -1283,7 +1375,8 @@ Promise.resolve('asyncfail').then(response => {
 Without a catch block, you can't even see the error, and that's what is called **silence failing**. This is very dangerous, because you can't even know what is going wrong with your code.
 
 But, with the new `async await` functions, you can still use the try-catch block.
-```
+
+```javascript
 async function fail(){
   try {
     await Promise.reject('oopsie')
@@ -1300,7 +1393,8 @@ fail() // oopsie - still good?
 
 The `Error` is an object, so, technically, we can extend it.
 For example:
-```
+
+```javascript
 class AuthenticationError extend Error {
   constructor(message){
     super(message)
