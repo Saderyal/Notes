@@ -14,9 +14,9 @@ There are actually 6 formulas, or types of Big O notations (ordered from the les
 * **CONSTANT TIME** -> `O(1)`. It's the less expensive. You do only one operation.
 * **LOGARITMIC TIME** -> `O(log n)` It's the complexity time for perfect binary trees. It's extremely efficient, because you don't have to look each element.
 * **LINEAR TIME** -> `O(n)`. For a for loop. You look every element.
-* **TO DO** -> `O(n log n)`. It's a common time complexity for sorting algorithms.
+* ---- **TO DO** -> `O(n log n)`. It's a common time complexity for sorting algorithms.
 * **QUADRATIC TIME** -> `O(n^2)`, `O(a*b)`. For nested for loops.
-* **TO DO** -> `O(2^n)`. TO DO
+* ----**TO DO** -> `O(2^n)`. TO DO
 * **FACTORIAL TIME**, or "oh no!" -> `O(n!)` It's the most expensive. A loop for each item.
 
 
@@ -153,7 +153,7 @@ This means that you can't really know if an operation like `push` has a complexi
 
 ## Implementation
 
-```
+```javascript
 class MyArray {
 
   constructor(){
@@ -258,7 +258,7 @@ CONS:
 
 ## Implementation
 
-```
+```javascript
 class HashTable {
 
   constructor(size){
@@ -372,7 +372,7 @@ CONS:
 
 ## Implementation
 
-```
+```javascript
 class Node {
 
   constructor(value){
@@ -498,7 +498,7 @@ console.log(myLinkedList.printList())
 
 ## Implementation (doubly linked list)
 
-```
+```javascript
 class DoubleNode {
 
   constructor(value){
@@ -672,7 +672,7 @@ CONS:
 
 ## Implementation (stacks)
 
-```
+```javascript
 class Node {
   constructor(value){
     this.value = value
@@ -793,7 +793,7 @@ myArrayStack.peek()
 
 ## Implementation (queues)
 
-```
+```javascript
 class Node {
 
   constructor(value){
@@ -1016,7 +1016,7 @@ So, to find a word, the Big O will be `O(length of the word)`
 
 ## Implementation (BST)
 
-```
+```javascript
 class Node {
 
   constructor(value){
@@ -1180,15 +1180,15 @@ Summarizing, there are 3 properties of Graphs:
 
 There are many ways to work with the data of a Graph:
 * With an **Edge list**. With this, we can store in an array the connections between a node an another one. In other words, we can store the **edges**. For examples:
-  ```
+  ```javascript
   const graph = [[0,2], [2,3], [2,1], [1,3]]
   ```
 * With an **Adjacent List**. In this method, we use the index (position) of the element to identify the node, and we save the nodes that the node in that position is connected to (Rather then be a list of lists, it can also be an object where the keys are the indexes, and the values are the lists of nodes that the node at the given index is related to). In the next example, the node with the value `0` is connected to the node `2`, the node with the value `1` is connected to the nodes `2` and `3`, and so on...
-  ```
+  ```javascript
   const graph = [[2], [2,3], [0,1,3], [1,2]]
   ```
 * With an **Adjacent Matrix**, you can store a matrix of zeros and ones (0-1) that represent rather or not the node in a given index of the first dimension of the matrix has connection with the given index of the second dimension of the matrix (even here, it can also be an object where the keys are the indexes and the values are the array of connections). For example:
-  ```
+  ```javascript
   const graph = [
     [0, 0, 1, 0],
     [0, 0, 1, 1],
@@ -1208,7 +1208,7 @@ Cons:
 
 ## Implementation
 
-```
+```javascript
 class Graph {
 
   constructor(){
@@ -1297,7 +1297,7 @@ Cons:
 
 ## Example (Fibonacci)
 
-```
+```javascript
 function findFactorialRecursive(number){
   if(number <= 1)
     return 1
@@ -1413,7 +1413,7 @@ The downside of non-comparison algorithms, is that **they only works with number
 
 ## Bubble sort Implementation
 
-```
+```javascript
 const sequence = [2, 1, 5, 7, 6, 3, 8, 9, 4]
 
 function bubbleSort(arr){
@@ -1438,7 +1438,7 @@ console.log(bubbleSort(sequence))
 
 ## Insertion Sort Implementation
 
-```
+```javascript
 const sequence = [6, 5, 3, 1, 8, 7, 2, 4]
 
 function insertionSort(arr){
@@ -1461,7 +1461,7 @@ console.log(insertionSort(sequence))
 
 ## Merge Sort Implementation
 
-```
+```javascript
 const sequence = [2, 1, 5, 7, 6, 3, 8, 9, 4]
 
 function mergeSort (array) {
@@ -1507,7 +1507,7 @@ console.log(answer);
 
 ## Quick Sort Implementation
 
-```
+```javascript
 const sequence = [3, 7, 8, 5, 2, 1, 9, 5, 6, 4]
 
 function quickSort(arr){
@@ -1530,7 +1530,7 @@ console.log(quickSort(sequence))
 
 ## Selection Sort Implementation
 
-```
+```javascript
 const sequence = [2, 1, 5, 7, 6, 3, 8, 9, 4]
 
 function selectionSort(arr){
@@ -1641,7 +1641,7 @@ Bellman's algorithm takes care also of negative numbers as weights on the edges,
 
 ## Implementation (BFS-DFS)
 
-```
+```javascript
 class Node {
 
   constructor(value){
@@ -1863,7 +1863,8 @@ To know when to use memoization, you can follow this pattern:
 ## Examples
 
 Base caching
-```
+
+```javascript
 function addTo80(n){
   console.log('long time')
   return n+80
@@ -1888,7 +1889,8 @@ console.log(memoize(5))
 ```
 
 Fibonacci with caching
-```
+
+```javascript
 let calculations = 0
 // O(2^n)
 function fibonacci(n){
