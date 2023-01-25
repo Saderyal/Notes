@@ -976,6 +976,84 @@ One thing where Binary Heaps are really good at, are **Priority Queues**
 
 Priority queues are another strucutre where each element has a priority, so the higher the priority of an element, the higher will be the position that the element has in the queue (you can think about an emergency room).
 
+**IMPLEMENTATION**:
+
+```javascript
+class PriorityQueue {
+
+  constructor(comparator = (a,b) => a > b){
+    this._heap = [];
+    this._comparator = comparator;
+  }
+
+  size(){
+    return this._heap.length;
+  }
+
+  isEmpty(){
+    return this.size() === 0;
+  }
+
+  peek(){
+    return this._heap[0];
+  }
+
+  push(value){
+    this._heap.push(value);
+    this._siftUp();
+    return this.size();
+  }
+
+  pop(){
+    if(this.size() > 1)
+      this._swap(0, this.size() - 1);
+    const poppedValue = this._heap.pop();
+    this._siftDown();
+    return poppedValue;
+  }
+
+  _parent(idx){
+    return Math.floor((idx-1)/1);
+  }
+
+  _leftChild(idx){
+    return idx * 2 + 1;
+  }
+
+  _rightChild(idx){
+    return idx * 2 + 2
+  }
+
+  _swap(i, j){
+    const temp = this._heap[i];
+    this._heap[i] = this._heap[j];
+    this._heap[j] = temp;
+  }
+
+  _compare(i, j){
+    return this._comparator(this._heap[i], this._heap[j]);
+  }
+
+  _siftUp(){
+    let nodeIdx = this.size()-1;
+    while(nodeIdx > 0 && this._compare(nodeIdx, this._parent(nodeIdx))){
+      this._swap(nodeIdx, this._parent(nodeIdx));
+      nodeIdx = this._parent(nodeIdx);
+    }
+  }
+
+  _siftDown(){
+    let nodeIdx = 0;
+    while((this._leftChild(nodeIdx) < this.size() && this._compare(this._leftChild(nodeIdx), nodeIdx)) || (this._rightChild(nodeIdx) < this.size() && this._compare(this._rightChild(nodeIdx), nodeIdx))) {
+      const greaterNodeIdx = this._rightChild(nodeIdx) < this.size() && this._compare(this._rightChild(nodeIdx), this._leftChild(nodeIdx)) ? this._rightChild(nodeIdx) : this._leftChild(nodeIdx);
+      this._swap(greaterNodeIdx, nodeIdx);
+      nodeIdx = greaterNodeIdx;
+    }
+  }
+
+}
+```
+
 ### Operations
 
 * Lookup -> `O(n)`
@@ -1394,8 +1472,8 @@ Here, you know than that the 4 is in the right position. You can so split the ar
 
 ## Which is the best?
 
-Insertion Sort should be used if the datasets is small, or if the data are nearly sorted.
-Bubble sort? You're kindly nerver gonna use it...
+Insertion Sort should be used if the dataset is small, or if the data are nearly sorted.
+Bubble sort? You're kinda nerver gonna use it...
 Also Selection Sort.
 Merge Sort, it's really really good because of Divide & Conquer, and should be used if you wonder of worst case scenario (that is also `O(n log n)`), but it's expensive in terms of space.
 While Quick Sort is really efficient and use optimal space, so it's commonly used, but to avoid the worst case you should pick a good pivot.
@@ -1403,7 +1481,7 @@ While Quick Sort is really efficient and use optimal space, so it's commonly use
 ## Comparison Sort vs Non-Comparison Sort
 
 All the algorithms we've seen until now are comparison algorithms. This means that to sort a sequence of values, you have to *compare* values to each other.
-In comparison Sort, it's mathematically impossible to have a time complexity of better than `O(n log n)` (in the wors case).
+In comparison Sort, it's mathematically impossible to have a time complexity of better than `O(n log n)` (in the worst case).
 But, there are also **Non-Comparison sorts**.
 This means that you can sort values without compare them to each other. This makes everything extremely efficient, but also really complex.
 Non-comparison sorting algorithms are:
@@ -1576,9 +1654,11 @@ In computer science, Linear Search is the process of finding a value within a li
 #### Binary Search
 
 Always in lists, Binary search is a method that works for ordered arrays, that consists of dividing the array each time to find the correct values. For example:
+
 ```
 1 4 6 9 12 34 45
 ```
+
 In the above example, we pick the middle value (9). If the value is greater then the value we want, we go to the left and we repeat the same procedure until we find the correct value, otherwise we go to the right (and do the same).
 If you think about it, you're really creating a binary search tree. This means that you'll have a time complexity of `O(log n)`
 
