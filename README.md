@@ -3,7 +3,7 @@
 These are the notes I took in my Developer Career. Maybe I can help someone with them :D
 
 Altough I'm Italian, I wrote this notes in English so that they can possibly reach more people.
-You'll probably find a lot of typos and grammatical errors. If so, you can first tell me where you found the error, spank me, and then I'll immediately correct it.
+You'll probably find a lot of typos and grammatical errors. If so, you can first tell me where you found the error, and then I'll immediately correct it.
 
 The code examples are written in `Javascript`.
 
